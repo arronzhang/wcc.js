@@ -1,0 +1,1 @@
+{"tag":"wx-page","children":[{"tag":"wx-view","attr":{"class":"container"},"children":[{"tag":"wx-view","attr":{"class":"topic-main"},"children":[{"tag":"virtual","children":[],"wxXCkey":2}],"n":[],"raw":{},"generics":{}},{"tag":"wx-loading","attr":{"hidden":false},"children":["\n    加载中...\n  "],"n":[],"raw":{},"generics":{}}],"n":[],"raw":{},"generics":{}}]}

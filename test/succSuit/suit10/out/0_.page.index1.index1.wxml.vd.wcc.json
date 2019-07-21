@@ -1,0 +1,1 @@
+{"tag":"wx-page","children":[{"tag":"wx-view","attr":{},"children":["logic:hello world from logic."],"n":[],"raw":{},"generics":{}},{"tag":"wx-view","attr":{},"children":["index:hello world from index."],"n":[],"raw":{},"generics":{}},{"tag":"wx-view","attr":{},"children":["inner:hello world from inner"],"n":[],"raw":{},"generics":{}}]}

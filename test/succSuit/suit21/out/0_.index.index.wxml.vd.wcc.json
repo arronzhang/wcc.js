@@ -1,0 +1,1 @@
+{"tag":"wx-page","children":[{"tag":"wx-view","attr":{},"children":[{"tag":"wx-my-component","attr":{},"children":[{"tag":"wx-view","attr":{},"children":["这里是插入到组件slot中的内容"],"n":[],"raw":{},"generics":{}}],"n":[],"raw":{},"generics":{}}],"n":[],"raw":{},"generics":{}}]}
