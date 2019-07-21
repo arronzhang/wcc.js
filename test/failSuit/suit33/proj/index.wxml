@@ -1,0 +1,2 @@
+<view>1</view>
+<view wx:else>2</view>

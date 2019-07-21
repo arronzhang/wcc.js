@@ -1,0 +1,6 @@
+<wxs module="foo">
+
+var a = /qw/gi;
+
+</wxs>
+<view> {{foo.msg}} </view>

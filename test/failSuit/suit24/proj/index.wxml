@@ -1,0 +1,4 @@
+<wxs module="foo">
+var delete = 1;
+</wxs>
+<view> {{foo.msg}} </view>

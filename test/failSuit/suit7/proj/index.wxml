@@ -1,0 +1,6 @@
+<view>
+  <div><input/></div>
+</view>
+<view>
+  <view1>
+    <view2 />

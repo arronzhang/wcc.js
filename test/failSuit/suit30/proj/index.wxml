@@ -1,0 +1,2 @@
+<view>wxs require fail</view>
+<wxs src="./index.wxs" module="xx"></wxs>

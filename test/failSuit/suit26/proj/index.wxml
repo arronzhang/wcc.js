@@ -1,0 +1,6 @@
+<wxs module="foo">
+
+a.NaN
+
+</wxs>
+<view> {{foo.msg}} </view>

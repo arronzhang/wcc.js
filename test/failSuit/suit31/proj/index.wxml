@@ -1,0 +1,6 @@
+<view>wxs require fail</view>
+
+<import src="./index.wxs"/>
+<include src="./index.wxs"/>
+
+<wxs src="./index.wxs" ></wxs>

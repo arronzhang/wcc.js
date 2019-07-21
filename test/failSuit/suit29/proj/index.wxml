@@ -1,0 +1,10 @@
+<wxs module="foo">
+
+function a(){
+  var a = arguments.a;
+}
+
+var a = arguments.a;
+
+</wxs>
+<view> {{foo.msg}} </view>
