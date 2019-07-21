@@ -1,6 +1,6 @@
-# 微信开发者工具wcc编译器实现
+# 实现微信开发者工具wcc编译器
 
-`wxml`文件和`wxs`文件编译器的`nodejs`实现`wcc.js`
+`wcc.js`是`wxml`文件和`wxs`文件编译器的`nodejs`实现
 
 目标：
 
@@ -128,7 +128,9 @@ wcc [-d] [-o OUTPUT] [-xc XComponentDefine] [-om XComponentDefine] [-cb [callbac
 
 #### [-d] 参数 output code for debug
 
-debug info，wxml模板的调试信息输出
+debug info，wxml模板的调试信息输出，主要是在目标代码执行报错后
+
+输出文件解析的位置信息。
 
 已经完美支持。
 
@@ -183,9 +185,10 @@ npm run test:fail
 测试样例地址：
 
 <https://github.com/caijw/wcc.js/tree/master/test/succSuit>
+
 <https://github.com/caijw/wcc.js/tree/master/test/failSuit>
 
-完善的测试样例，用例还在持续增加，以覆盖到大部分的场景。
+完善的测试样例，换提交测试用例来继续完善该项目，以覆盖到大部分的场景。
 
 正向用例-测试流程要点：
 
@@ -240,3 +243,14 @@ npm run benchmark
 ### wxml解析
 
 复用了[htmlparser2](https://github.com/fb55/htmlparser2/blob/master/lib/Tokenizer.js)的token解析部分的实现。
+
+## 关于提交mr
+
+欢迎提交测试样例，测试样例是完整的小程序源码，测试样例用来保证实现的正确性。
+
+功能的实现可能不是很好，欢迎对代码进行改进。
+
+提交前，前确保：
+
+1. 测试样例全部通过
+2. 确保改动后的性能不会变的太差
