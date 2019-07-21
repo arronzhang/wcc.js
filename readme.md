@@ -245,6 +245,8 @@ npm run benchmark
 
 改造了[htmlparser2](https://github.com/fb55/htmlparser2/blob/master/lib/Tokenizer.js)的token解析部分的实现，基于有穷状态的自动机，解析token十分高效！
 
+wxml解析生成的[AST格式参考](https://github.com/caijw/wcc.js/blob/master/ml_ast_spec.md)
+
 ## 关于提交mr
 
 欢迎提交测试样例，测试样例是完整的小程序源码，测试样例用来保证实现的正确性。
