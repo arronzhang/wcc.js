@@ -1,6 +1,6 @@
 {
   "name": "wcc.js",
-  "version": "1.0.17",
+  "version": "1.0.18",
   "description": "Compiler for wxml and wxss files.",
   "main": "index.js",
   "scripts": {

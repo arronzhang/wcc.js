@@ -16,6 +16,10 @@ const cpJobs = [
     src: path.join(__dirname, '../package.json'),
     dest: path.join(__dirname, '../dist'),
   },
+  {
+    src: path.join(__dirname, '../readme.md'),
+    dest: path.join(__dirname, '../dist'),
+  },
 ]
 
 let promises = [];
