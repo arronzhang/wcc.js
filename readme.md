@@ -243,7 +243,7 @@ npm run benchmark
 
 ### wxml解析
 
-复用了[htmlparser2](https://github.com/fb55/htmlparser2/blob/master/lib/Tokenizer.js)的token解析部分的实现，基于有穷状态的自动机，解析token十分高效！
+改造了[htmlparser2](https://github.com/fb55/htmlparser2/blob/master/lib/Tokenizer.js)的token解析部分的实现，基于有穷状态的自动机，解析token十分高效！
 
 ## 关于提交mr
 

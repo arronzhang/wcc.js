@@ -1,6 +1,6 @@
 /**
 
-这部分逻辑， 复用了https: //github.com/fb55/htmlparser2/blob/master/lib/Tokenizer.js
+这部分逻辑， 改造了https: //github.com/fb55/htmlparser2/blob/master/lib/Tokenizer.js
 的token解析逻辑，基于有穷状态的自动机，解析token十分高效！
 
 _emitToken：
