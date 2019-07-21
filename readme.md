@@ -1,10 +1,10 @@
-# wxml文件和wxss文件编译器wcc.js
+# 微信开发者工具wcc编译器实现
 
-`wxml`文件和`wxss`文件编译器`nodejs`实现
+`wxml`文件和`wxs`文件编译器的`nodejs`实现`wcc.js`
 
 目标：
 
-- 将二级制文件`wcc`实现为`nodejs`模块
+- 二级制文件`wcc`实现为`nodejs`模块`wcc.js`
 - 完善的测试用例支持
 - 完善的性能测试
 - 客观的编译性能
@@ -39,7 +39,7 @@ WCC(wccCompileConfig).then(function (wccRes) {
 });
 ```
 
-## 本地开发wcc
+## 本地开发wcc.js
 
 ### 下载代码
 
@@ -81,8 +81,8 @@ npm run benchmark
 
 需要的虚拟`dom`节点的原始数据。
 
-`mac`版本`wcc`文件地址: <>
-`windows`版本`wcc`文件地址: <>
+`mac`版本`wcc`文件地址: <https://github.com/caijw/wcc.js/blob/master/test/wcc>
+`windows`版本`wcc`文件地址: <https://github.com/caijw/wcc.js/blob/master/test/wcc.exe>
 
 如何获得`wcc`？ [下载mac版本微信开发者工具](https://developers.weixin.qq.com/miniprogram/dev/devtools/download.html)，安装后，打开`Applications`目录，找到微信开发者工具，右键`Show Package Contents`，在`Contents/Resources/package.nw/js/vender/wcc`（该目录可能会被调整）。
 
@@ -182,19 +182,19 @@ npm run test:fail
 
 测试样例地址：
 
-<>
-<>
+<https://github.com/caijw/wcc.js/tree/master/test/succSuit>
+<https://github.com/caijw/wcc.js/tree/master/test/failSuit>
 
 完善的测试样例，用例还在持续增加，以覆盖到大部分的场景。
 
 正向用例-测试流程要点：
 
-1. `wcc.js`将完整的小程序源码，编译成`js`代码[code.wccjs.js]()
-2. `wcc`将完整的小程序源码，编译成`js`代码[code.wcc.js]()
+1. `wcc.js`将完整的小程序源码，编译成`js`代码[code.wccjs.js](https://github.com/caijw/wcc.js/blob/master/test/succSuit/suit1/out/code.wccjs.js)
+2. `wcc`将完整的小程序源码，编译成`js`代码[code.wcc.js](https://github.com/caijw/wcc.js/blob/master/test/succSuit/suit1/out/code.wcc.js)
 3. 运行`code.wccjs.js`获取`$gwx`函数`wccjs$gwx`
 4. 运行`code.wcc.js`获取`$gwx`函数`wcc$gwx`
-5. 对于每个小程序页面`path`，运行`wccjs$gwx`获取渲染函数并运行该渲染函数，获取类似虚拟`dom`的数据结构[path.wccjs.vd]()
-6. 对于每个小程序页面`path`，运行`wcc$gwx`获取渲染函数并运行该渲染函数，获取类似虚拟`dom`的数据结构[path.wcc.vd]()
+5. 对于每个小程序页面`path`，运行`wccjs$gwx`获取渲染函数并运行该渲染函数，获取类似虚拟`dom`的数据结构[path.wccjs.vd](https://github.com/caijw/wcc.js/blob/master/test/succSuit/suit1/out/0_.index.wxml.vd.wccjs.json)
+6. 对于每个小程序页面`path`，运行`wcc$gwx`获取渲染函数并运行该渲染函数，获取类似虚拟`dom`的数据结构[path.wcc.vd](https://github.com/caijw/wcc.js/blob/master/test/succSuit/suit1/out/0_.index.wxml.vd.wcc.json)
 7. 对比`path.wccjs.vd`和`path.wccjs.vd`是否完全一致
 
 反向用例-测试流程要点：
