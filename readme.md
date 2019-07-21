@@ -82,6 +82,7 @@ npm run benchmark
 需要的虚拟`dom`节点的原始数据。
 
 `mac`版本`wcc`文件地址: <https://github.com/caijw/wcc.js/blob/master/test/wcc>
+
 `windows`版本`wcc`文件地址: <https://github.com/caijw/wcc.js/blob/master/test/wcc.exe>
 
 如何获得`wcc`？ [下载mac版本微信开发者工具](https://developers.weixin.qq.com/miniprogram/dev/devtools/download.html)，安装后，打开`Applications`目录，找到微信开发者工具，右键`Show Package Contents`，在`Contents/Resources/package.nw/js/vender/wcc`（该目录可能会被调整）。
@@ -242,7 +243,7 @@ npm run benchmark
 
 ### wxml解析
 
-复用了[htmlparser2](https://github.com/fb55/htmlparser2/blob/master/lib/Tokenizer.js)的token解析部分的实现。
+复用了[htmlparser2](https://github.com/fb55/htmlparser2/blob/master/lib/Tokenizer.js)的token解析部分的实现，基于有穷状态的自动机，解析token十分高效！
 
 ## 关于提交mr
 
