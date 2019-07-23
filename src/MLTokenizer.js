@@ -243,7 +243,7 @@ Tokenizer.prototype._stateBeforeTagName = function (cItem) {
         this._errored = true;
         let message = `${this._options.path}:${cItem.loc.line}:${cItem.loc.col}: unexpected character \`${c}\`\n`;
         this._cbs.onerror(
-            new error.QccError(
+            new error.WccError(
                 error.CODE.ML_PARSE.UNEXPECTED_LEFT_ANGLE_BRACKET,
                 message
             )
@@ -267,7 +267,7 @@ Tokenizer.prototype._stateInTagName = function (cItem) {
         this._errored = true;
         let message = `${this._options.path}:${cItem.loc.line}:${cItem.loc.col}: unexpected character \`${c}\`\n`;
         this._cbs.onerror(
-            new error.QccError(
+            new error.WccError(
                 error.CODE.ML_PARSE.UNEXPECTED_LEFT_ANGLE_BRACKET,
                 message
             )
@@ -313,7 +313,7 @@ Tokenizer.prototype._stateAfterClosingTagName = function (cItem) {
         this._errored = true;
         let message = `${this._options.path}:${cItem.loc.line}:${cItem.loc.col}: unexpected character \`${c}\`\n`;
         this._cbs.onerror(
-            new error.QccError(
+            new error.WccError(
                 error.CODE.ML_PARSE.UNEXPECTED_LEFT_ANGLE_BRACKET,
                 message
             )
@@ -333,7 +333,7 @@ Tokenizer.prototype._stateBeforeAttributeName = function (cItem) {
         this._errored = true;
         let message = `${this._options.path}:${cItem.loc.line}:${cItem.loc.col}: unexpected attribute name, near \`${c}\`\n`;
         this._cbs.onerror(
-            new error.QccError(
+            new error.WccError(
                 error.CODE.ML_PARSE.UNEXPECTED_LEFT_ANGLE_BRACKET,
                 message
             )
@@ -343,7 +343,7 @@ Tokenizer.prototype._stateBeforeAttributeName = function (cItem) {
         this._errored = true;
         let message = `${this._options.path}:${cItem.loc.line}:${cItem.loc.col}: unexpected character \`${c}\`\n`;
         this._cbs.onerror(
-            new error.QccError(
+            new error.WccError(
                 error.CODE.ML_PARSE.UNEXPECTED_LEFT_ANGLE_BRACKET,
                 message
             )
@@ -378,7 +378,7 @@ Tokenizer.prototype._stateInAttributeName = function (cItem) {
         this._errored = true;
         let message = `${this._options.path}:${cItem.loc.line}:${cItem.loc.col}: unexpected attribute name, near \`${c}\`\n`;
         this._cbs.onerror(
-            new error.QccError(
+            new error.WccError(
                 error.CODE.ML_PARSE.UNEXPECTED_LEFT_ANGLE_BRACKET,
                 message
             )
@@ -426,7 +426,7 @@ Tokenizer.prototype._stateBeforeAttributeValue = function (cItem) {
             this._errored = true;
             let message = `${this._options.path}:${cItem.loc.line}:${cItem.loc.col}: unexpected character \`${c}\`\n`;
             this._cbs.onerror(
-                new error.QccError(
+                new error.WccError(
                     error.CODE.ML_PARSE.UNEXPECTED_LEFT_ANGLE_BRACKET,
                     message
                 )
@@ -893,7 +893,7 @@ Tokenizer.prototype._cleanup = function () {
                 this._errored = true;
                 let message = `${this._options.path}:${data.start.loc.line}:${data.start.loc.col}: unexpected end \`${data.str}\`\n`;
                 this._cbs.onerror(
-                    new error.QccError(
+                    new error.WccError(
                         error.CODE.ML_PARSE.UNEXPECTED_LEFT_ANGLE_BRACKET,
                         message
                     )
@@ -1102,7 +1102,7 @@ Tokenizer.prototype._parse = function () {
         this._options.path
       }:${cItem.loc.line}:${cItem.loc.col}`;
             this._cbs.onerror(
-                new error.QccError(error.CODE.ML_PARSE.UNKNOW_STATE, message)
+                new error.WccError(error.CODE.ML_PARSE.UNKNOW_STATE, message)
             );
         }
         this._index++;

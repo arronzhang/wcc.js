@@ -47,7 +47,7 @@ class WCC {
           } else if (/\.wxml$/.test(path)) {
             //transform ml 2 ast
             let ast = astParser.astParse(template, path, wcc);
-            if (ast instanceof error.QccError) {
+            if (ast instanceof error.WccError) {
               return reject(ast);
             }
             wcc.templatesObjs.push({
@@ -69,13 +69,13 @@ class WCC {
   }
   optimize() {
     let res = optimizer.optimize(this.templatesObjs, this);
-    if (res instanceof error.QccError) {
+    if (res instanceof error.WccError) {
       this.errorCallback(res);
     }
   }
   codeGenerate() {
     this.out = codeGenerater.codeGenerate(this.templatesObjs, this);
-    if (this.out instanceof error.QccError) {
+    if (this.out instanceof error.WccError) {
       this.errorCallback(this.out);
     }
   }

@@ -21,7 +21,7 @@ function dfsWalk(root, parentNode, node, wcc) {
     res = processText(root, parentNode, node, wcc);
   }
 
-  if (res instanceof error.QccError) {
+  if (res instanceof error.WccError) {
     return res;
   }
 
@@ -35,7 +35,7 @@ function dfsWalk(root, parentNode, node, wcc) {
     }
     if (childIdx >= 0) {
       res = dfsWalk(root, node, node.children[childIdx], wcc);
-      if (res instanceof error.QccError) {
+      if (res instanceof error.WccError) {
         return res;
       }
     } else {
@@ -79,7 +79,7 @@ function dfsWalk(root, parentNode, node, wcc) {
         //   let path = root.path;
         //   let code = -1;
         //   let message = `${path}:${node.openTag.start.loc.line}:${node.openTag.start.loc.col}: rawHash calculate fail, ${err.message}\n`;
-        //   return (new error.QccError(code, message));
+        //   return (new error.WccError(code, message));
         // }
       }
     }else if(node.type === 'text'){
@@ -90,7 +90,7 @@ function dfsWalk(root, parentNode, node, wcc) {
         //   let path = root.path;
         //   let code = -1;
         //   let message = `${path}:${node.openTag.start.loc.line}:${node.openTag.start.loc.col}: rawHash calculate fail, ${err.message}\n`;
-        //   return (new error.QccError(code, message));
+        //   return (new error.WccError(code, message));
         // }
       // }
     }
@@ -99,7 +99,7 @@ function dfsWalk(root, parentNode, node, wcc) {
 };
 
 exports.optimize = function (templatesObjs = [], wcc) {
-  let qccError;
+  let wccError;
   for (let idx = 0; idx < templatesObjs.length; ++idx) {
     let templatesObj = templatesObjs[idx];
     if (templatesObj.type === 'xml') {
@@ -114,21 +114,21 @@ exports.optimize = function (templatesObjs = [], wcc) {
         return;
       }
       let res = dfsWalk(ast, null, ast, wcc);
-      if (res instanceof error.QccError) {
-        qccError = res;
+      if (res instanceof error.WccError) {
+        wccError = res;
         break;
       }
     } else if (templatesObj.type === 'xs') {
       let parseRes = xsParser.parse(templatesObj.template, templatesObj.path || '', 1, wcc);
-      if (parseRes instanceof error.QccError) {
-        qccError = parseRes;
+      if (parseRes instanceof error.WccError) {
+        wccError = parseRes;
         break;
       }
       templatesObj.template = parseRes;
     }
   }
-  if (qccError) {
-    return qccError;
+  if (wccError) {
+    return wccError;
   } else {
     return templatesObjs;
   }
@@ -148,7 +148,7 @@ function processTag(root, parentNode, node, wcc) {
   } else if (isTag(node, 'wxs')) {
     res = processWxsTag(root, parentNode, node, wcc);
   }
-  if(res instanceof error.QccError){
+  if(res instanceof error.WccError){
     return res;
   }
   res = processGenericAttribute(root, parentNode, node, wcc); //抽象节点处理
@@ -176,7 +176,7 @@ function processGenericAttribute(root, parentNode, node, wcc) {
   for (let i = 0; i < genericAttributes.length; ++i) {
     genericAttributes[i].name.str = genericAttributes[i].name.str.substring(8);
     let res = processAttribute(root, node, genericAttributes[i], wcc);
-    if (res instanceof error.QccError) {
+    if (res instanceof error.WccError) {
       return res;
     }
     node.generics.push(genericAttributes[i]);
@@ -200,27 +200,27 @@ function processForAttribute(root, parentNode, node, wcc) {
   let forItemAttribute = getAndRemoveSpecialAttribute(node, 'for-item');
   let keyAttribute = getAndRemoveSpecialAttribute(node, 'key');
   let res = processAttribute(root, node, forAttribute, wcc);
-  if (res instanceof error.QccError) {
+  if (res instanceof error.WccError) {
     return res;
   }
   node.for = forAttribute;
   if (forIndexAttribute && forIndexAttribute.value && forIndexAttribute.value.str) {
     let res = processAttribute(root, node, forIndexAttribute, wcc);
-    if (res instanceof error.QccError) {
+    if (res instanceof error.WccError) {
       return res;
     }
     node.forIndex = forIndexAttribute;
   }
   if (forItemAttribute && forItemAttribute.value && forItemAttribute.value.str) {
     let res = processAttribute(root, node, forItemAttribute, wcc);
-    if (res instanceof error.QccError) {
+    if (res instanceof error.WccError) {
       return res;
     }
     node.forItem = forItemAttribute;
   }
   if (keyAttribute && keyAttribute.value && typeof  keyAttribute.value.str === 'string' ) {
     let res = processAttribute(root, node, keyAttribute, wcc);
-    if (res instanceof error.QccError) {
+    if (res instanceof error.WccError) {
       return res;
     }
     node.key = keyAttribute;
@@ -236,7 +236,7 @@ function processIfAttribute(root, parentNode, node, wcc) {
   }
   if (ifAttribute && ifAttribute.value && ifAttribute.value.str) {
     let res = processAttribute(root, node, ifAttribute, wcc);
-    if (res instanceof error.QccError) {
+    if (res instanceof error.WccError) {
       return res;
     }
     node.if = ifAttribute;
@@ -250,7 +250,7 @@ function processIfAttribute(root, parentNode, node, wcc) {
       let elseAttribute = getAndRemoveSpecialAttribute(curNode, 'else');
       if (elseAttribute) {
         let res = processAttribute(root, node, elseAttribute, wcc);
-        if (res instanceof error.QccError) {
+        if (res instanceof error.WccError) {
           return res;
         }
         curNode.else = elseAttribute;
@@ -259,7 +259,7 @@ function processIfAttribute(root, parentNode, node, wcc) {
         break;
       } else if (elifAttribute && elifAttribute.value && elifAttribute.value.str) {
         let res = processAttribute(root, node, elifAttribute, wcc);
-        if (res instanceof error.QccError) {
+        if (res instanceof error.WccError) {
           return res;
         }
         curNode.elif = elifAttribute;
@@ -314,7 +314,7 @@ function processTemplateTag(root, parentNode, node, wcc) {
   if (nameAttribute && nameAttribute.value && nameAttribute.value.str) {
     //template定义
     let res = processAttribute(root, node, nameAttribute, wcc);
-    if (res instanceof error.QccError) {
+    if (res instanceof error.WccError) {
       return res;
     }
     node.name = nameAttribute;
@@ -323,13 +323,13 @@ function processTemplateTag(root, parentNode, node, wcc) {
   } else if (isAttribute && isAttribute.value && isAttribute.value.str) {
     //template引用
     let res = processAttribute(root, node, isAttribute, wcc);
-    if (res instanceof error.QccError) {
+    if (res instanceof error.WccError) {
       return res;
     }
     node.is = isAttribute;
     if (dataAttribute && dataAttribute.value && dataAttribute.value.str) {
       let res = processAttribute(root, node, dataAttribute, wcc);
-      if (res instanceof error.QccError) {
+      if (res instanceof error.WccError) {
         return res;
       }
       node.data = dataAttribute;
@@ -365,7 +365,7 @@ function processWxsTag(root, parentNode, node, wcc) {
       }else{
         let code = -1;
         let message = `${path}:${node.openTag.start.loc.line}:${node.openTag.start.loc.col}: ${src} not found from ${path}\n`;
-        return (new error.QccError(code, message));
+        return (new error.WccError(code, message));
       }
 
 
@@ -379,7 +379,7 @@ function processWxsTag(root, parentNode, node, wcc) {
       let children = node.children || [];
       if (children.length && children[0] && children[0].type === 'text' && children[0].value.str) {
         let parseRes = xsParser.parse(children[0].value.str, root.path || '', children[0].value.start.loc.line, wcc);
-        if (parseRes instanceof error.QccError) {
+        if (parseRes instanceof error.WccError) {
           return parseRes;
         }
         children[0].value.str = parseRes;
@@ -393,7 +393,7 @@ function processWxsTag(root, parentNode, node, wcc) {
     let path = root.path;
     let code = -1;
     let message = `${path}:${node.openTag.start.loc.line}:${node.openTag.start.loc.col}: module expected in wxs tag\n`;
-    return (new error.QccError(code, message));
+    return (new error.WccError(code, message));
   }
   removeChild(parentNode, node);
   node.children = [];
@@ -405,7 +405,7 @@ function processAttributes(root, parentNode, node, wcc) {
     let path = root.path;
     let code = -1;
     let message = `${path}:${attribute.name.start.loc.line}:${attribute.name.start.loc.col}: Bad attr \`wx:else\` with message: \`wx:if not found, then something must be wrong\`.\n`;
-    return (new error.QccError(code, message));
+    return (new error.WccError(code, message));
   }
   attribute = getAndRemoveSpecialAttribute(node, 'elif');
   if(getAndRemoveSpecialAttribute(node, 'elif')){
@@ -416,7 +416,7 @@ function processAttributes(root, parentNode, node, wcc) {
   node.attributes = node.attributes || [];
   for (let i = 0; i < node.attributes.length; ++i) {
     let res = processAttribute(root, node, node.attributes[i], wcc);
-    if (res instanceof error.QccError) {
+    if (res instanceof error.WccError) {
       return res;
     }
   }
@@ -502,7 +502,7 @@ function uniqueAttributes(node, wcc) {
  * @param {*} sholdWrapAsObject 是否需要用对象包裹数据绑定字符串，用在自定义模板的数据
  * @param {*} loc 位置信息
  * @param {*} isStatic 是否强制解析为静态的
- * @param {*} wcc qcc实例
+ * @param {*} wcc wcc实例
  * @returns 解析结果或者错误对象
  */
 function zParseTxt(root, node, type, txt, sholdWrapAsObject, loc, isStatic, wcc) {
@@ -516,7 +516,7 @@ function zParseTxt(root, node, type, txt, sholdWrapAsObject, loc, isStatic, wcc)
     type,
     wcc
   });
-  if (zParseRes instanceof error.QccError) {
+  if (zParseRes instanceof error.WccError) {
     return zParseRes;
   }
   let zIdx = root.info.z.indexOf(zParseRes);
@@ -543,7 +543,7 @@ function processAttribute(root, ownerNode, attributeNode, wcc) {
     isStatic = true;
   }
   let zIdx = zParseTxt(root, attributeNode, 'attribute', attributeValue, sholdWrapAsObject, attributeNode.value.start.loc, isStatic, wcc);
-  if (zIdx instanceof error.QccError) {
+  if (zIdx instanceof error.WccError) {
     return zIdx;
   }
   attributeNode.value.zIdx = zIdx;
@@ -555,7 +555,7 @@ function processText(root, parentNode, textNode, wcc) {
     return;
   }
   let zIdx = zParseTxt(root, textNode, 'text', textValue, false, textNode.value.start.loc, false, wcc);
-  if (zIdx instanceof error.QccError) {
+  if (zIdx instanceof error.WccError) {
     return zIdx;
   }
   textNode.value.zIdx = zIdx;

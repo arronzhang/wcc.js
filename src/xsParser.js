@@ -78,7 +78,7 @@ exports.parse = function (source, filePath, startLine, wcc) {
     let idx1 = msg.lastIndexOf('(');
     let msg1 = msg.substring(0, idx1);
     let message = `${filePath}:${err.loc.line + startLine - 1}:${err.loc.column}: ${err.name}: ${msg1}\n`;
-    return (new error.QccError(error.CODE.ES5_PARSE_ERROR, message));
+    return (new error.WccError(error.CODE.ES5_PARSE_ERROR, message));
   }
 
   try {
@@ -93,15 +93,15 @@ exports.parse = function (source, filePath, startLine, wcc) {
     let idx1 = msg.lastIndexOf('(');
     let msg1 = msg.substring(0, idx1);
     let message = `${filePath}:${err.loc.line + startLine - 1}:${err.loc.column}: ${err.name}: ${msg1}\n`;
-    return (new error.QccError(error.CODE.BABEL_PARSE_ERROR, message));
+    return (new error.WccError(error.CODE.BABEL_PARSE_ERROR, message));
   }
 
-  let qccError;
+  let wccError;
 
   babelTraverse(ast, {
     enter(path) {
 
-      if (path.node._qcc_handled) {
+      if (path.node._wcc_handled) {
         path.skip();
         return;
       }
@@ -111,7 +111,7 @@ exports.parse = function (source, filePath, startLine, wcc) {
        */
       if (path.isObjectProperty() && babelTypes.isNumericLiteral(path.node.key)) {
         let message = `${filePath}:${path.node.key.loc.start.line + startLine - 1}:${path.node.key.loc.start.column}: Unexpected token \`:\`\n`;
-        qccError = (new error.QccError(-1, message));
+        wccError = (new error.WccError(-1, message));
         path.stop();
         return;
       }
@@ -126,7 +126,7 @@ exports.parse = function (source, filePath, startLine, wcc) {
           let idNode = path.node.declarations[i].id;
           if (babelTypes.isIdentifier(idNode) && WhiteVariableIdentifier.indexOf(idNode.name) > -1) {
             let message = `${filePath}:${idNode.loc.start.line + startLine - 1}:${idNode.loc.start.column}: SyntaxError: invalid reserved identifier \`${idNode.name}\`\n`;
-            qccError = new error.QccError(error.CODE.INVALID_RESERVED_IDENTIFIER, message);
+            wccError = new error.WccError(error.CODE.INVALID_RESERVED_IDENTIFIER, message);
             path.stop();
             return;
           }
@@ -135,14 +135,14 @@ exports.parse = function (source, filePath, startLine, wcc) {
       if (path.isIdentifier() && WhiteVariableIdentifier.indexOf(path.node.name) > -1 && babelTypes.isObjectProperty(path.parent)) {
         //对象属性 var a = {NaN: 1}
         let message = `${filePath}:${path.node.loc.start.line + startLine - 1}:${path.node.loc.start.column}: SyntaxError: invalid ObjectProperty \`${path.node.name}\`\n`;
-        qccError = new error.QccError(error.CODE.INVALID_OBJECTPROPERTY, message);
+        wccError = new error.WccError(error.CODE.INVALID_OBJECTPROPERTY, message);
         path.stop();
         return;
       }
       if (path.isIdentifier() && WhiteVariableIdentifier.indexOf(path.node.name) > -1 && babelTypes.isMemberExpression(path.parent) && path.parent.property === path.node && !path.parent.computed) {
         //对象属性访问 a.NaN
         let message = `${filePath}:${path.node.loc.start.line + startLine - 1}:${path.node.loc.start.column}: SyntaxError: invalid MemberExpression \`${path.node.name}\`\n`;
-        qccError = new error.QccError(error.CODE.INVALID_MEMBEREXPRESSION, message);
+        wccError = new error.WccError(error.CODE.INVALID_MEMBEREXPRESSION, message);
         path.stop();
         return;
       }
@@ -153,7 +153,7 @@ exports.parse = function (source, filePath, startLine, wcc) {
        */
       if (path.isRegExpLiteral()) {
         let message = `${filePath}:${path.node.loc.start.line + startLine - 1}:${path.node.loc.start.column}: SyntaxError: Unexpected token \`/\`\n`;
-        qccError = new error.QccError(error.CODE.UNEXPECTED_TOKEN, message);
+        wccError = new error.WccError(error.CODE.UNEXPECTED_TOKEN, message);
         path.stop();
         return;
       }
@@ -202,10 +202,10 @@ exports.parse = function (source, filePath, startLine, wcc) {
       if (path.isThisExpression()) {
         if (!(babelTypes.isMemberExpression(path.parent) || babelTypes.isCallExpression(path.parent))) {
           let message = `${filePath}:${path.node.loc.start.line + startLine - 1}:${path.node.loc.start.column}: SyntaxError: invalid usage of identifier \`this\`\n`;
-          qccError = new error.QccError(error.CODE.INVALID_THIS, message);
+          wccError = new error.WccError(error.CODE.INVALID_THIS, message);
           path.stop();
           return;
-        } else if (!path.node._qcc_handled) {
+        } else if (!path.node._wcc_handled) {
 
           let thisNode = babelTypes.expressionStatement(
             babelTypes.conditionalExpression(
@@ -239,16 +239,16 @@ exports.parse = function (source, filePath, startLine, wcc) {
         let functionPath = path.findParent((path) => path.isFunctionDeclaration()) || path.findParent((path) => path.isFunctionExpression());
         if (!(functionPath)) {
           let message = `${filePath}:${path.node.loc.start.line + startLine - 1}:${path.node.loc.start.column}: SyntaxError: invalid usage of identifier \`arguments\`\n`;
-          qccError = new error.QccError(error.CODE.INVALID_ARGUMENTS, message);
+          wccError = new error.WccError(error.CODE.INVALID_ARGUMENTS, message);
           path.stop();
           return;
         } else if (!(babelTypes.isMemberExpression(path.parent) || babelTypes.isCallExpression(path.parent))) {
           let message = `${filePath}:${path.node.loc.start.line + startLine - 1}:${path.node.loc.start.column}: SyntaxError: invalid usage of identifier \`arguments\`\n`;
-          qccError = new error.QccError(error.CODE.INVALID_ARGUMENTS, message);
+          wccError = new error.WccError(error.CODE.INVALID_ARGUMENTS, message);
           path.stop();
           return;
         } else {
-          functionPath.node._qcc_arguments_Referenced = true;
+          functionPath.node._wcc_arguments_Referenced = true;
         }
       }
       //字符串处理
@@ -261,7 +261,7 @@ exports.parse = function (source, filePath, startLine, wcc) {
       }
     },
     exit: function (path) {
-      if ((path.isFunctionDeclaration() || path.isFunctionExpression()) && path.node._qcc_arguments_Referenced) {
+      if ((path.isFunctionDeclaration() || path.isFunctionExpression()) && path.node._wcc_arguments_Referenced) {
         //如果函数有引用arguments，需要在函数开头增加 'arguments.nv_length = arguments.length;'
         let stateMent = babelTypes.expressionStatement(
           babelTypes.assignmentExpression(
@@ -278,7 +278,7 @@ exports.parse = function (source, filePath, startLine, wcc) {
             )
           )
         );
-        stateMent._qcc_handled = true; // 打个标记
+        stateMent._wcc_handled = true; // 打个标记
         path.get('body').unshiftContainer('body', stateMent);
       }
       /**
@@ -327,7 +327,7 @@ exports.parse = function (source, filePath, startLine, wcc) {
             newProperty,
             oldMemberExpression.computed
           );
-          newMemberExpression._qcc_handled = true;
+          newMemberExpression._wcc_handled = true;
           path.replaceWith(newMemberExpression);
         }
       }
@@ -336,8 +336,8 @@ exports.parse = function (source, filePath, startLine, wcc) {
     }
   });
 
-  if (qccError) {
-    return qccError;
+  if (wccError) {
+    return wccError;
   }
   let res;
   try {
@@ -346,7 +346,7 @@ exports.parse = function (source, filePath, startLine, wcc) {
     }).code || '';
   } catch (e) {
     let message = `${path}: generate error:${e.message}\n`;
-    return (new error.QccError(error.CODE.BABEL_GENERATE, message));
+    return (new error.WccError(error.CODE.BABEL_GENERATE, message));
   }
   // res = res.replace(/\\\\x/gm, '\\x');
   // res = util.escapeTxt(res);

@@ -35,7 +35,7 @@ function runSuit(suitConfig) {
     it(suitConfig.name + ' [wcc.js compiles files to javascript]', function () {
       return new Promise(function (resolve, reject) {
         let startTime = Date.now();
-        testUtil.runwccjs(compilerConfig).then(function (code) {
+        testUtil.runWccjs(compilerConfig).then(function (code) {
           let endTime = Date.now();
           wccjsCompileTime = endTime - startTime;
           wccjsOutPutCode = code;

@@ -7,13 +7,13 @@ const util = require('util');
 
 exports.astParse = function (template = '', path, wcc) {
   let root;
-  let qccError;
+  let wccError;
   let mlParser = new MLParser({
     onend: function (ast) {
       root = ast;
     },
     onerror: function (err) {
-      qccError = err;
+      wccError = err;
     }
   }, {
     path
@@ -24,8 +24,8 @@ exports.astParse = function (template = '', path, wcc) {
   }
   mlParser.write(template);
   mlParser.end();
-  if (qccError) {
-    return qccError;
+  if (wccError) {
+    return wccError;
   }
   root.info = {}; //attach extra info
   // console.log('ast:',  util.inspect(root, {depth:null,colors: true}) );

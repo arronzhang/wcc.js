@@ -1,5 +1,4 @@
 /*v0.5vv_20190312_syb_scopedata*/window.__wcc_version__='v0.5vv_20190312_syb_scopedata';window.__wcc_version_info__={"customComponents":true,"fixZeroRpx":true,"propValueDeepCopy":false};
-  window.__qcc_version__='v0.0.1';window.__qcc_version_info__={"customComponents":true,"fixZeroRpx":true,"propValueDeepCopy":false};
   var $gwxc
   var $gaic={}
   $gwx=function(path,global){

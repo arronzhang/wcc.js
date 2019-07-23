@@ -110,7 +110,7 @@ function _state_IN_SEPARATOR(store) {
       let message = ``;
       let code = -1;
       message = `unexpected \`${c}\``;
-      return makeQccError(option, {line: item.loc.line, col: item.loc.col}, code, message);
+      return makeWccError(option, {line: item.loc.line, col: item.loc.col}, code, message);
     }
   } else if( c === '='){
     if(!store.meetDQ && !store.meetSQ){
@@ -125,7 +125,7 @@ function _state_IN_SEPARATOR(store) {
         let message = ``;
         let code = -1;
         message = `unexpected \`${c}\``;
-        return makeQccError(option, {line: item.loc.line, col: item.loc.col}, code, message);
+        return makeWccError(option, {line: item.loc.line, col: item.loc.col}, code, message);
       }
     }
   } else if (c === '}') {
@@ -206,9 +206,9 @@ function parseBinding(text = '', option = {}) {
       res = _state_MEET_SEPARATOR_4(store);
     } else {
       let message = `unknow expression state for ${text}`;
-      res = makeQccError(store.option, {line: item.loc.line, col: item.loc.col}, error.CODE.Z_PARSE, message);
+      res = makeWccError(store.option, {line: item.loc.line, col: item.loc.col}, error.CODE.Z_PARSE, message);
     }
-    if (res instanceof error.QccError) {
+    if (res instanceof error.WccError) {
       return res;
     }
     store.index++;
@@ -229,15 +229,15 @@ function parseBinding(text = '', option = {}) {
   } else if (store.state === MEET_SEPARATOR_2) {
     let section = getSection(store.cItems, store.sectionStart, store.index - 1);
     let message = `did you forget }}, \' or \".\n`;
-    return makeQccError(store.option, {line: section.start.loc.line, col: section.start.loc.col}, -1, message);
+    return makeWccError(store.option, {line: section.start.loc.line, col: section.start.loc.col}, -1, message);
   } else if (store.state === IN_SEPARATOR) {
     let section = getSection(store.cItems, store.sectionStart, store.index - 1);
     let message = `did you forget }}, \' or \".\n`;
-    return makeQccError(store.option, {line: section.start.loc.line, col: section.start.loc.col}, -1, message);
+    return makeWccError(store.option, {line: section.start.loc.line, col: section.start.loc.col}, -1, message);
   } else if (store.state === MEET_SEPARATOR_3) {
     let section = getSection(store.cItems, store.sectionStart, store.index - 1);
     let message = `did you forget }}, \' or \".\n`;
-    return makeQccError(store.option, {line: section.start.loc.line, col: section.start.loc.col}, -1, message);
+    return makeWccError(store.option, {line: section.start.loc.line, col: section.start.loc.col}, -1, message);
   } else if (store.state === MEET_SEPARATOR_4) {
     if (store.sectionStart < store.index - 2) {
       let section = getSection(store.cItems, store.sectionStart, store.index - 3);
@@ -261,7 +261,7 @@ exports.parse = function (text, option = {}) {
     }
   }
   let bindings = parseBinding(text, option);
-  if (bindings instanceof error.QccError) {
+  if (bindings instanceof error.WccError) {
     return bindings;
   }
   //没有数据绑定，长度为1，类型为static
@@ -277,7 +277,7 @@ exports.parse = function (text, option = {}) {
   let parseRes = [];
   for (let i = 0; i < bindings.length; ++i) {
     let exp = parseExp(bindings[i], option);
-    if (exp instanceof error.QccError) {
+    if (exp instanceof error.WccError) {
       return exp;
     }
     parseRes.push(exp);
@@ -327,7 +327,7 @@ function parseExp(binding, option) {
       }
     } catch (err) {
       let message = err.message.replace(', expected ";"', '');
-      return makeQccError(option, loc, error.CODE.BABEL_PARSE_EXPRESSIO, message);
+      return makeWccError(option, loc, error.CODE.BABEL_PARSE_EXPRESSIO, message);
     }
 
     return walk(ast, binding, option, false);
@@ -336,19 +336,19 @@ function parseExp(binding, option) {
   }
 }
 
-function makeQccError(option, loc = {
+function makeWccError(option, loc = {
   line: -1,
   col: -1
 }, code, message) {
   if (option.type === 'attribute') {
     message = `${option.path}:${option.node.name.start.loc.line}:${option.node.name.start.loc.col}: Bad attr \`${option.node.name.str}\` with message: ${message} at ${loc.line}:${loc.col}.\n`;
-    return (new error.QccError(code, message));
+    return (new error.WccError(code, message));
   } else if (option.type === 'text') {
     message = `${option.path}:${option.node.value.start.loc.line}:${option.node.value.start.loc.col}: Bad value with message: ${message} at ${loc.line}:${loc.col}.\n`;
-    return (new error.QccError(code, message));
+    return (new error.WccError(code, message));
   }else{
     message = `${option.path}:${option.node.value.start.loc.line}:${option.node.value.start.loc.col}: unknow binding type at ${loc.line}:${loc.col}.\n`;
-    return (new error.QccError(code, message));
+    return (new error.WccError(code, message));
   }
 }
 
@@ -360,14 +360,14 @@ function walk(node, binding, option, isStatic) {
       if (node.body && node.body.length === 1) {
         return walk(node.body[0], binding, option, isStatic);
       } else if (node.body && node.body.length > 1) {
-        return makeQccError(option, {}, -1, 'too much expression');
+        return makeWccError(option, {}, -1, 'too much expression');
       } else if (node.directives && node.directives.length === 1) {
         /**
         {{"hello"}} 会被解析为directives属性的type为Directive的节点，节点的value的type为DirectiveLiteral
         */
         return walk(node.directives[0], binding, option, isStatic);
       } else if (node.directives && node.directives.length > 1) {
-        return makeQccError(option, {}, error.CODE.TOO_MUCH_AST_DIRECTIVES, 'too much expression');
+        return makeWccError(option, {}, error.CODE.TOO_MUCH_AST_DIRECTIVES, 'too much expression');
       } else {
         return '';
       }
@@ -391,11 +391,11 @@ function walk(node, binding, option, isStatic) {
       computed: 属性是否需要求值
       */
       let objectRes = walk(node.object, binding, option, isStatic);
-      if (objectRes instanceof error.QccError) {
+      if (objectRes instanceof error.WccError) {
         return objectRes;
       }
       let propertyRes = walk(node.property, binding, option, !node.computed);
-      if (propertyRes instanceof error.QccError) {
+      if (propertyRes instanceof error.WccError) {
         return propertyRes;
       }
       return `[[6],${objectRes},${propertyRes}]`;
@@ -404,11 +404,11 @@ function walk(node, binding, option, isStatic) {
       二元表达式
       */
       let leftRes = walk(node.left, binding, option, isStatic);
-      if (leftRes instanceof error.QccError) {
+      if (leftRes instanceof error.WccError) {
         return leftRes;
       }
       let rightRes = walk(node.right, binding, option, isStatic);
-      if (rightRes instanceof error.QccError) {
+      if (rightRes instanceof error.WccError) {
         return rightRes;
       }
       return `[[2, "${node.operator}"], ${leftRes}, ${rightRes}]`;
@@ -417,11 +417,11 @@ function walk(node, binding, option, isStatic) {
       逻辑表达式
       */
       let leftRes = walk(node.left, binding, option, isStatic);
-      if (leftRes instanceof error.QccError) {
+      if (leftRes instanceof error.WccError) {
         return leftRes;
       }
       let rightRes = walk(node.right, binding, option, isStatic);
-      if (rightRes instanceof error.QccError) {
+      if (rightRes instanceof error.WccError) {
         return rightRes;
       }
       return `[[2, "${node.operator}"],${leftRes},${rightRes}]`;
@@ -430,7 +430,7 @@ function walk(node, binding, option, isStatic) {
       一元表达式，只有一个操作数
       */
       let argumentRes = walk(node.argument, binding, option, isStatic);
-      if (argumentRes instanceof error.QccError) {
+      if (argumentRes instanceof error.WccError) {
         return argumentRes;
       }
       return `[[2, "${node.operator}"], ${argumentRes}]`;
@@ -443,11 +443,11 @@ function walk(node, binding, option, isStatic) {
       if (node.elements.length) {
         //数组长度可能为1, 2, 3...
         let arrRes = node.elements.reduce(function (preRes, curNode) {
-          if (preRes instanceof error.QccError) {
+          if (preRes instanceof error.WccError) {
             return preRes;
           } else {
             let curRes = walk(curNode, binding, option, isStatic);
-            if (curRes instanceof error.QccError) {
+            if (curRes instanceof error.WccError) {
               return curRes;
             } else {
               return `[[5], ${preRes} ${preRes && ','}${curRes}]`;
@@ -455,7 +455,7 @@ function walk(node, binding, option, isStatic) {
           }
         }, '');
 
-        if (arrRes instanceof error.QccError) {
+        if (arrRes instanceof error.WccError) {
           return arrRes;
         }
         return `[[4], ${arrRes}]`;
@@ -469,7 +469,7 @@ function walk(node, binding, option, isStatic) {
       <template is="msgItem" data="{{...item}}" />
       */
       let argumentRes = walk(node.argument, binding, option, isStatic);
-      if (argumentRes instanceof error.QccError) {
+      if (argumentRes instanceof error.WccError) {
         return argumentRes;
       }
       return `[[10], ${argumentRes}]`;
@@ -478,15 +478,15 @@ function walk(node, binding, option, isStatic) {
       三元运算符 a ? b : c
       */
       let consequentRes = walk(node.consequent, binding, option, isStatic);
-      if (consequentRes instanceof error.QccError) {
+      if (consequentRes instanceof error.WccError) {
         return consequentRes;
       }
       let alternateRes = walk(node.alternate, binding, option, isStatic);
-      if (alternateRes instanceof error.QccError) {
+      if (alternateRes instanceof error.WccError) {
         return alternateRes;
       }
       let testRes = walk(node.test, binding, option, isStatic);
-      if (testRes instanceof error.QccError) {
+      if (testRes instanceof error.WccError) {
         return testRes;
       }
       return `[[2,'?:'],${testRes},${consequentRes},${alternateRes}]`;
@@ -507,18 +507,18 @@ function walk(node, binding, option, isStatic) {
         let props = node.properties || [];
         //先取前两个
         let prop0Res = walk(props[0], binding, option, isStatic);
-        if (prop0Res instanceof error.QccError) {
+        if (prop0Res instanceof error.WccError) {
           return prop0Res;
         }
         let prop1Res = walk(props[1], binding, option, isStatic);
-        if (prop1Res instanceof error.QccError) {
+        if (prop1Res instanceof error.WccError) {
           return prop1Res;
         }
         res = `[[9], ${prop0Res}, ${prop1Res}]`;
         //大于两个，后面继续合并为依赖
         for (let i = 2, len = props.length; i < len; i++) {
           let propRes = walk(props[i], binding, option, isStatic);
-          if (propRes instanceof error.QccError) {
+          if (propRes instanceof error.WccError) {
             return propRes;
           }
           res = `[[9], ${res}, ${propRes}]`;
@@ -541,7 +541,7 @@ function walk(node, binding, option, isStatic) {
       */
       if (node.key.name && typeof node.value === 'object') {
         let valueRes = walk(node.value, binding, option, isStatic);
-        if (valueRes instanceof error.QccError) {
+        if (valueRes instanceof error.WccError) {
           return valueRes;
         }
         return `[[8], "${node.key.name}", ${valueRes}]`;
@@ -562,21 +562,21 @@ function walk(node, binding, option, isStatic) {
       let arguments = node.arguments || [];
       let res = ``;
       let calleeRes = walk(callee, binding, option, isStatic);
-      if (calleeRes instanceof error.QccError) {
+      if (calleeRes instanceof error.WccError) {
         return calleeRes;
       }
       if (arguments.length) {
         let argumentsRes = arguments.reduce((preRes, curNode) => {
-          if (preRes instanceof error.QccError) {
+          if (preRes instanceof error.WccError) {
             return preRes;
           }
           let curRes = walk(curNode, binding, option, isStatic);
-          if (curRes instanceof error.QccError) {
+          if (curRes instanceof error.WccError) {
             return curRes;
           }
           return `[[5], ${preRes} ${preRes && ','}${curRes}]`;
         }, '');
-        if (argumentsRes instanceof error.QccError) {
+        if (argumentsRes instanceof error.WccError) {
           return argumentsRes;
         }
         res = `[[12], ${calleeRes}, ${argumentsRes}]`;
@@ -586,7 +586,7 @@ function walk(node, binding, option, isStatic) {
       return res;
     } else {
       //非法的表达式
-      return makeQccError(option, {
+      return makeWccError(option, {
         line: binding.section.start.loc.line + node.loc.start.line - 1,
         col: binding.section.start.loc.col + node.loc.start.column
       }, error.CODE.WRONG_EXPRESSION_TYPE, 'unknow expression');

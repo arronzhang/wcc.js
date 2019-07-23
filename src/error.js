@@ -28,7 +28,7 @@ const CODE = {
     UNKNOW_EXPRESSION_SEPARATOR_STATE: -4101
   }
 };
-class QccError {
+class WccError {
   constructor(code, message) {
     this.code = code;
     this.message = message;
@@ -37,4 +37,4 @@ class QccError {
 
 module.exports.CODE = CODE;
 
-module.exports.QccError = QccError;
+module.exports.WccError = WccError;

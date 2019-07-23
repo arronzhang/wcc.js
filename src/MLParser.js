@@ -87,7 +87,7 @@ Parser.prototype.onclosetag = function (name) {
 	// console.log('onclosetag:', name);
 	let top = this._stack[this._stack.length - 1];
 	if (top.openTag.str !== name.str) {
-		this._error = new error.QccError(-1, `${this._options.path}:${name.start.loc.line}:${name.start.loc.col}: expect end-tag \`${top.openTag.str}\`., near \`${name.str}\`\n`);
+		this._error = new error.WccError(-1, `${this._options.path}:${name.start.loc.line}:${name.start.loc.col}: expect end-tag \`${top.openTag.str}\`., near \`${name.str}\`\n`);
 		this.onerror(this._error);
 		return;
 	}
@@ -153,7 +153,7 @@ Parser.prototype.onerror = function (err) {
 Parser.prototype.onend = function () {
 	if(this._stack.length > 1){
 		let top = this._stack[this._stack.length - 1];
-		this._error = new error.QccError(-1, `${this._options.path}:${top.openTag.start.loc.line}:${top.openTag.start.loc.col}: end tag missing, near \`${top.openTag.str}\`\n`);
+		this._error = new error.WccError(-1, `${this._options.path}:${top.openTag.start.loc.line}:${top.openTag.start.loc.col}: end tag missing, near \`${top.openTag.str}\`\n`);
 		this.onerror(this._error);
 		return;
 	}

@@ -95,7 +95,7 @@ exports.getWccExecArgs = function (config) {
 };
 
 
-exports.runwccjs = function (config) {
+exports.runWccjs = function (config) {
   return new Promise(function (resolve, reject) {
     wccjs(config).then(function (wccjsRes) {
       let code = wccjsRes.code;

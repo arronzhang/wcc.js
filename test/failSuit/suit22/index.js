@@ -16,7 +16,7 @@ const testSuit = {
       './index.wxml'
     ]
   },
-  qccError: '',
+  wccError: '',
   wccError: ''
 };
 

@@ -16,7 +16,7 @@
        './index.wxml'
      ]
    },
-   qccError: '',
+   wccError: '',
    wccError: ''
  };
  
