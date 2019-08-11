@@ -2,6 +2,8 @@
 
 `wcc.js`是`wxml`文件和`wxs`文件编译器的`nodejs`实现
 
+wxss文件编译器的nodejs实现，可以查看[wcsc.js](https://github.com/caijw/wcsc.js)
+
 目标：
 
 - 二级制文件`wcc`实现为`nodejs`模块`wcc.js`
