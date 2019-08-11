@@ -317,12 +317,16 @@ function parseExp(binding, option) {
     let loc = binding.section.start.loc;
     try {
       if (sholdWrapAsObject) {
-        txt = `obj = {${txt}}`
+        txt = `obj = ({${txt}})`;
+      } else {
+        txt = `obj = (${txt})`;
       }
       ast = babelParser.parse(txt, {
         plugins: ['objectRestSpread']
       });
       if (sholdWrapAsObject) {
+        ast = ast.program.body[0].expression.right;
+      } else {
         ast = ast.program.body[0].expression.right;
       }
     } catch (err) {
