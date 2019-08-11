@@ -241,7 +241,11 @@ npm run benchmark
 
 复用了自动化测试的测试样例，对比测试了`wcc.js`和`wcc`编译相同的小程序项目的耗时对比
 
-## 实现细节 TODO
+## 实现细节
+
+### 数据绑定
+
+比较重要的是数据绑定的实现，具体可以参考<https://github.com/caijw/wcc.js/tree/master/dataBinding.md>
 
 ### wxml解析
 

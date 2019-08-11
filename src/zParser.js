@@ -403,9 +403,9 @@ function walk(node, binding, option, isStatic) {
         return propertyRes;
       }
       return `[[6],${objectRes},${propertyRes}]`;
-    } else if (babelTypes.isBinaryExpression(node)) {
+    } else if (babelTypes.isBinaryExpression(node) || babelTypes.isLogicalExpression(node)) {
       /*
-      二元表达式
+      二元表达式或逻辑表达式
       */
       let leftRes = walk(node.left, binding, option, isStatic);
       if (leftRes instanceof error.WccError) {
@@ -416,19 +416,6 @@ function walk(node, binding, option, isStatic) {
         return rightRes;
       }
       return `[[2, "${node.operator}"], ${leftRes}, ${rightRes}]`;
-    } else if (babelTypes.isLogicalExpression(node)) {
-      /*
-      逻辑表达式
-      */
-      let leftRes = walk(node.left, binding, option, isStatic);
-      if (leftRes instanceof error.WccError) {
-        return leftRes;
-      }
-      let rightRes = walk(node.right, binding, option, isStatic);
-      if (rightRes instanceof error.WccError) {
-        return rightRes;
-      }
-      return `[[2, "${node.operator}"],${leftRes},${rightRes}]`;
     } else if (babelTypes.isUnaryExpression(node)) {
       /*
       一元表达式，只有一个操作数
@@ -552,8 +539,6 @@ function walk(node, binding, option, isStatic) {
       } else {
         return ``;
       }
-    } else if (babelTypes.isDirective(node)) {
-      return walk(node.value, binding, option, isStatic);
     } else if (babelTypes.isDirectiveLiteral(node)) {
       return `[1, "${node.value}"]`;
     } else if (babelTypes.isCallExpression(node)) {
