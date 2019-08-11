@@ -105,10 +105,12 @@ arrRes: 数组所有项的Z数组解析结果
 
 `[[4], ${arrRes}]`
 
-比如例子[a1, a2, a3]，arrRes解析如下: 
+比如例子[a1, a2, a3]，arrRes解析如下:
 
 a1Res: a1的Z数组接卸结果
+
 a2Res: a2的Z数组接卸结果
+
 a3Res: a3的Z数组接卸结果
 
 `[ [5], [[5], [[5], ${a1Res}], ${a2Res}], ${a3Res} ]`
@@ -136,7 +138,9 @@ argumentRes: 析构赋值参数(例子中是item)的Z数组解析结果
 比如: a ? b : c
 
 testRes: 例子中的a的Z数组解析结果
+
 consequentRes: 例子中的b的Z数组解析结果
+
 alternateRes: 例子中的c的Z数组解析结果
 
 `[[2,'?:'],${testRes},${consequentRes},${alternateRes}]`
@@ -156,7 +160,9 @@ alternateRes: 例子中的c的Z数组解析结果
 比如{key1: value1, key2: value2, key3: value3}
 
 prop1Res: 第1个对象属性的Z数组解析结果，这里是key1: value1
+
 prop2Res: 第2个对象属性的Z数组解析结果，这里是key2: value2
+
 prop3Res: 第3个对象属性的Z数组解析结果，这里是key3: value3
 
 `[[9], [[9], ${prop1Res}, ${prop2Res}], ${prop3Res}]`
@@ -172,6 +178,7 @@ this表达式类型
 对象属性类型
 
 node.key.name: 属性的key
+
 valueRes: 属性的值的Z数组解析结果
 
 `[[8], "${node.key.name}", ${valueRes}]`
@@ -191,6 +198,7 @@ node.value: 常量的值
 例如: a.b.c(d, e, f)
 
 calleeRes: 函数调用者的Z数组解析结果，例子中是a.b.c
+
 argumentsRes: 函数调用参数的Z数组解析结果，例子中是d, d, f
 
 `[[12], ${calleeRes}, ${argumentsRes}]`
@@ -198,7 +206,9 @@ argumentsRes: 函数调用参数的Z数组解析结果，例子中是d, d, f
 对于argumentsRes，解析结果为一个数组的Z数组表示，对于例子:
 
 dRes: 参数d的Z数组解析结果
+
 eRes: 参数e的Z数组解析结果
+
 fRes: 参数f的Z数组解析结果
 
 `[[5], [[5], [[5], ${dRes}], ${eRes}],${fRes}]`
